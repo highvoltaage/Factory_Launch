@@ -158,10 +158,9 @@ button.primary {
 }
 
 .world-grid {
-  --world-width: 8;
-  --world-height: 8;
   display: grid;
-  grid-template-columns: repeat(var(--world-width), minmax(52px, 1fr));
+  grid-template-columns: repeat(12, minmax(52px, 1fr));
+  grid-auto-rows: minmax(52px, 1fr);
   gap: 0.65rem;
   background: rgba(12, 15, 23, 0.7);
   padding: 0.85rem;
@@ -178,11 +177,21 @@ button.primary {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1 / 1;
+  min-height: 52px;
   overflow: hidden;
   padding: 0.35rem;
   transition: border 0.2s ease, transform 0.15s ease;
   color: var(--text);
   font: inherit;
+}
+
+.world-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  pointer-events: none;
 }
 
 .world-tile img {

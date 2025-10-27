@@ -63,8 +63,8 @@ export class UIController {
   renderWorld({ placementMode }) {
     if (!this.worldGrid) return;
     const { width, height } = this.gameState.world;
-    this.worldGrid.style.setProperty("--world-width", width);
-    this.worldGrid.style.setProperty("--world-height", height);
+    this.worldGrid.style.gridTemplateColumns = `repeat(${width}, minmax(52px, 1fr))`;
+    this.worldGrid.style.gridTemplateRows = `repeat(${height}, minmax(52px, 1fr))`;
     this.worldGrid.innerHTML = "";
 
     for (const tile of this.gameState.world.tiles()) {
