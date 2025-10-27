@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factory Launch Prototype</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Factory Launch</h1>
+      <p class="tagline">Research. Automate. Launch.</p>
+    </header>
+    <main class="layout">
+      <section class="panel" id="research-panel">
+        <h2>Research Node</h2>
+        <div id="research-status" class="research-status"></div>
+        <button id="contribute-research" class="primary">Contribute Resources</button>
+      </section>
+      <section class="panel" id="inventory-panel">
+        <h2>Player Inventory</h2>
+        <div class="inventory-grid" id="inventory-grid"></div>
+        <div class="gather-controls">
+          <h3>Gather Resources</h3>
+          <div class="gather-buttons">
+            <button data-resource="stone">Mine Stone</button>
+            <button data-resource="coal">Gather Coal</button>
+            <button data-resource="iron">Collect Iron</button>
+            <button data-resource="copper">Collect Copper</button>
+          </div>
+        </div>
+      </section>
+      <section class="panel" id="storage-panel">
+        <h2>Storage Chests</h2>
+        <div id="storage-chests"></div>
+      </section>
+      <section class="panel" id="machines-panel">
+        <h2>Machines</h2>
+        <div id="drills"></div>
+        <div id="smelters"></div>
+      </section>
+      <section class="panel" id="log-panel">
+        <h2>Event Log</h2>
+        <ul id="event-log"></ul>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <p>
+        Prototype inspired by
+        <strong>Factorio</strong> and <strong>Immortality Factory</strong>.
+      </p>
+    </footer>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
