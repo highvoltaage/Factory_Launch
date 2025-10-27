@@ -15,9 +15,15 @@ class Inventory {
   }
 
   add(resource, amount) {
+    if (amount <= 0) return 0;
     const current = this.get(resource);
-    this.items.set(resource, current + amount);
-    return 0;
+    const capacity = this.stackLimit;
+    const space = Math.max(0, capacity - current);
+    const toStore = Math.min(space, amount);
+    if (toStore > 0) {
+      this.items.set(resource, current + toStore);
+    }
+    return amount - toStore;
   }
 
   remove(resource, amount) {
@@ -62,8 +68,7 @@ export class StorageManager {
     let remaining = amount;
     for (const chest of this.chests) {
       if (remaining <= 0) break;
-      chest.add(resource, remaining);
-      remaining = 0;
+      remaining = chest.add(resource, remaining);
     }
     return remaining;
   }

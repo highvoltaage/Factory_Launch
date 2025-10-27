@@ -1,4 +1,7 @@
+import json
 import math
+import subprocess
+from pathlib import Path
 
 from factory_launch import GameState
 from factory_launch.constants import (
@@ -66,3 +69,38 @@ def test_inventory_stack_limit():
     overflow = state.player_inventory.add("stone", PLAYER_STACK_LIMIT + 25)
     assert state.player_inventory.items["stone"] == PLAYER_STACK_LIMIT
     assert overflow == 25
+
+
+def test_research_requires_gathering_before_starting():
+    state = GameState()
+    assert not state.start_research("starter")
+
+
+def test_browser_state_starts_empty_and_locked():
+    repo_root = Path(__file__).resolve().parents[1]
+    script = """
+import { GameState } from './js/gameState.js';
+const state = new GameState();
+const summary = {
+  resources: state.resources,
+  storage: state.storage.toJSON(),
+  research: state.research,
+  contributed: state.contributeToResearch()
+};
+console.log(JSON.stringify(summary));
+"""
+    result = subprocess.run(
+        ["node", "--input-type=module", "-e", script],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    data = json.loads(result.stdout.strip())
+
+    assert data["contributed"] is False
+    assert all(value == 0 for value in data["resources"].values())
+    for chest in data["storage"]["chests"]:
+        assert all(value == 0 for value in chest.values())
+    assert all(value == 0 for value in data["research"]["progress"].values())
+    assert data["research"]["completed"] is False

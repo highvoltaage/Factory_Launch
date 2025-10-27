@@ -40,8 +40,25 @@ export class GameState {
   }
 
   depositToPlayer(resource, amount) {
-    this.resources[resource] += amount;
-    this.storage.playerInventory.add(resource, amount);
+    if (amount <= 0) {
+      return;
+    }
+    let remaining = this.storage.playerInventory.add(resource, amount);
+    const storedInInventory = amount - remaining;
+    if (storedInInventory > 0) {
+      this.resources[resource] += storedInInventory;
+    }
+    if (remaining > 0) {
+      const leftover = this.storage.depositToChests(resource, remaining);
+      const storedInChests = remaining - leftover;
+      const label = RESOURCE_LABELS[resource] ?? resource;
+      if (storedInChests > 0) {
+        this.addLog(`Inventory full. Routed ${storedInChests} ${label} to storage.`);
+      }
+      if (leftover > 0) {
+        this.addLog(`No space for ${leftover} ${label}.`);
+      }
+    }
   }
 
   takeFromPlayer(resource, amount) {
@@ -62,12 +79,24 @@ export class GameState {
   }
 
   gather(resource, amount = 1) {
-    const leftover = this.storage.playerInventory.add(resource, amount);
-    const gained = amount - leftover;
-    this.resources[resource] += gained;
+    let remaining = this.storage.playerInventory.add(resource, amount);
+    const gained = amount - remaining;
+    const label = RESOURCE_LABELS[resource] ?? resource;
     if (gained > 0) {
-      const label = RESOURCE_LABELS[resource] ?? resource;
+      this.resources[resource] += gained;
       this.addLog(`Gathered ${gained} ${label}.`);
+    } else {
+      this.addLog(`Inventory full. Unable to carry ${label}.`);
+    }
+    if (remaining > 0) {
+      const leftover = this.storage.depositToChests(resource, remaining);
+      const storedInChests = remaining - leftover;
+      if (storedInChests > 0) {
+        this.addLog(`Routed ${storedInChests} ${label} to storage.`);
+      }
+      if (leftover > 0) {
+        this.addLog(`Storage full. Lost ${leftover} ${label}.`);
+      }
     }
   }
 
