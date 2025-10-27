@@ -6,6 +6,7 @@ import {
 } from "./constants.js";
 import { CoalDrill, StoneSmelter } from "./machines.js";
 import { StorageManager } from "./storage.js";
+import { World, TILE_KIND } from "./world.js";
 
 export class GameState {
   constructor({ onLog } = {}) {
@@ -15,6 +16,7 @@ export class GameState {
       return acc;
     }, {});
     this.storage = new StorageManager();
+    this.world = new World();
     this.drills = [];
     this.smelters = [];
     this.research = {
@@ -138,6 +140,11 @@ export class GameState {
     for (let i = 0; i < RESEARCH_REWARD.rewardSmelters; i += 1) {
       this.smelters.push(new StoneSmelter());
     }
+    this.addLog(
+      `Received ${RESEARCH_REWARD.rewardDrills} coal drills and ${RESEARCH_REWARD.rewardSmelters} smelter${
+        RESEARCH_REWARD.rewardSmelters === 1 ? "" : "s"
+      }.`
+    );
   }
 
   addFuelToMachine(machine, amount) {
@@ -158,5 +165,73 @@ export class GameState {
     for (const smelter of this.smelters) {
       smelter.tick(deltaSeconds, this);
     }
+  }
+
+  unplacedDrills() {
+    return this.drills.filter((drill) => !drill.position);
+  }
+
+  unplacedSmelters() {
+    return this.smelters.filter((smelter) => !smelter.position);
+  }
+
+  getMachineAt(x, y) {
+    const tile = this.world.getTile(x, y);
+    if (!tile || tile.kind !== TILE_KIND.MACHINE) return null;
+    return tile.machine;
+  }
+
+  gatherFromTile(x, y) {
+    const resource = this.world.gatherResource(x, y);
+    if (!resource) {
+      return false;
+    }
+    this.gather(resource, 1);
+    return true;
+  }
+
+  placeDrillAt(x, y) {
+    if (!this.research.completed) {
+      this.addLog("Research the starter tech to place drills.");
+      return false;
+    }
+    const available = this.drills.find((drill) => !drill.position);
+    if (!available) {
+      this.addLog("No available drills to place.");
+      return false;
+    }
+    if (!this.world.canPlaceDrill(x, y)) {
+      this.addLog("Drills must be placed on a resource deposit.");
+      return false;
+    }
+    const tile = this.world.getTile(x, y);
+    available.setResource(tile.resource);
+    available.setClusterSize(1);
+    if (this.world.placeMachine(available, x, y)) {
+      this.addLog(`Placed a coal drill on ${RESOURCE_LABELS[tile.resource]}.`);
+      return true;
+    }
+    return false;
+  }
+
+  placeSmelterAt(x, y) {
+    if (!this.research.completed) {
+      this.addLog("Research the starter tech to place smelters.");
+      return false;
+    }
+    const available = this.smelters.find((smelter) => !smelter.position);
+    if (!available) {
+      this.addLog("No available smelters to place.");
+      return false;
+    }
+    if (!this.world.canPlaceSmelter(x, y)) {
+      this.addLog("That tile is already occupied.");
+      return false;
+    }
+    if (this.world.placeMachine(available, x, y)) {
+      this.addLog("Placed a stone smelter.");
+      return true;
+    }
+    return false;
   }
 }

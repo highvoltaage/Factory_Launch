@@ -16,12 +16,13 @@ export function clusterMultiplier(clusterSize) {
 }
 
 export class CoalDrill {
-  constructor({ resource = "stone", clusterSize = 1 } = {}) {
+  constructor({ resource = "stone", clusterSize = 1, position = null } = {}) {
     this.id = `drill-${nextMachineId++}`;
     this.resource = resource;
     this.clusterSize = clusterSize;
     this.fuel = 0;
     this.outputBuffer = 0;
+    this.position = position;
   }
 
   addFuel(amount) {
@@ -37,7 +38,7 @@ export class CoalDrill {
   }
 
   get active() {
-    return this.fuel > 0;
+    return this.fuel > 0 && Boolean(this.position);
   }
 
   tick(deltaSeconds, gameState) {
@@ -60,11 +61,12 @@ export class CoalDrill {
 }
 
 export class StoneSmelter {
-  constructor({ recipe = "iron" } = {}) {
+  constructor({ recipe = "iron", position = null } = {}) {
     this.id = `smelter-${nextMachineId++}`;
     this.recipe = recipe; // "iron" | "copper"
     this.fuel = 0;
     this.progress = 0;
+    this.position = position;
   }
 
   addFuel(amount) {
@@ -76,7 +78,7 @@ export class StoneSmelter {
   }
 
   get active() {
-    return this.fuel > 0;
+    return this.fuel > 0 && Boolean(this.position);
   }
 
   tick(deltaSeconds, gameState) {

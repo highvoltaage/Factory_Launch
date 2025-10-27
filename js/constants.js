@@ -16,6 +16,22 @@ export const RESOURCE_LABELS = {
   copperPlates: "Copper Plates"
 };
 
+export const RESOURCE_IMAGES = Object.freeze({
+  stone: "img/stone.svg",
+  coal: "img/coal.svg",
+  iron: "img/iron.svg",
+  copper: "img/copper.svg",
+  ironPlates: "img/iron.svg",
+  copperPlates: "img/copper.svg"
+});
+
+export const MACHINE_IMAGES = Object.freeze({
+  drill: "img/drill.svg",
+  smelter: "img/smelter.svg"
+});
+
+export const WORLD_DIMENSIONS = Object.freeze({ width: 12, height: 8 });
+
 export const PLAYER_STACK_LIMIT = 50;
 export const CHEST_STACK_LIMIT = 999;
 

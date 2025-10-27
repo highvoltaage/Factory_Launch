@@ -12,6 +12,27 @@
       <p class="tagline">Research. Automate. Launch.</p>
     </header>
     <main class="layout">
+      <section class="panel world-panel" aria-labelledby="world-title">
+        <div class="panel-header">
+          <h2 id="world-title">Launch Site</h2>
+          <div id="placement-indicator" class="meta">Select a machine to place.</div>
+        </div>
+        <div class="world-toolbar" role="toolbar" aria-label="Build toolbar">
+          <button type="button" class="build-button" data-build="drill">
+            <span class="build-label">Place Drill</span>
+            <span class="build-count"><span data-count>0</span> available</span>
+          </button>
+          <button type="button" class="build-button" data-build="smelter">
+            <span class="build-label">Place Smelter</span>
+            <span class="build-count"><span data-count>0</span> available</span>
+          </button>
+          <button type="button" id="cancel-placement" class="build-button build-button--cancel" disabled>
+            Cancel Placement
+          </button>
+        </div>
+        <div id="world-grid" class="world-grid" role="grid" aria-label="Factory grid"></div>
+        <div id="tile-info" class="tile-info meta">Select a tile to see details.</div>
+      </section>
       <section class="panel" id="research-panel">
         <h2>Research Node</h2>
         <div id="research-status" class="research-status"></div>
@@ -20,19 +41,10 @@
       <section class="panel" id="inventory-panel">
         <h2>Player Inventory</h2>
         <div class="inventory-grid" id="inventory-grid"></div>
-        <div class="gather-controls">
-          <h3>Gather Resources</h3>
-          <div class="gather-buttons">
-            <button data-resource="stone">Mine Stone</button>
-            <button data-resource="coal">Gather Coal</button>
-            <button data-resource="iron">Collect Iron</button>
-            <button data-resource="copper">Collect Copper</button>
-          </div>
-        </div>
       </section>
       <section class="panel" id="storage-panel">
         <h2>Storage Chests</h2>
-        <div id="storage-chests"></div>
+        <div id="storage-chests" class="storage-grid"></div>
       </section>
       <section class="panel" id="machines-panel">
         <h2>Machines</h2>
@@ -41,7 +53,7 @@
       </section>
       <section class="panel" id="log-panel">
         <h2>Event Log</h2>
-        <ul id="event-log"></ul>
+        <div id="event-log" class="event-log"></div>
       </section>
     </main>
     <footer class="app-footer">
