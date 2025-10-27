@@ -30,12 +30,9 @@ class GameState:
             self.tech_tree = self._create_default_tech_tree()
 
     def _init_default_storage(self) -> None:
-        starting_chest = StorageChest()
-        for resource in ("stone", "coal", "iron", "copper"):
-            starting_chest.items[resource] = 100
-        for product in ("iron_plates", "copper_plates"):
-            starting_chest.items[product] = 50
-        self.storage_chests.append(starting_chest)
+        """Create empty starting storage chests."""
+
+        self.storage_chests.append(StorageChest())
 
     def _init_starting_machines(self) -> None:
         for _ in range(2):

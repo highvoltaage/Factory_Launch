@@ -46,13 +46,6 @@ export class StorageManager {
   constructor() {
     this.playerInventory = new Inventory(PLAYER_STACK_LIMIT);
     this.chests = [new Inventory(CHEST_STACK_LIMIT), new Inventory(CHEST_STACK_LIMIT)];
-
-    for (const resource of ["stone", "coal", "iron", "copper"]) {
-      this.chests[0].add(resource, CHEST_STACK_LIMIT * 2);
-    }
-    for (const item of ["ironPlates", "copperPlates"]) {
-      this.chests[1].add(item, CHEST_STACK_LIMIT);
-    }
   }
 
   takeFromChests(resource, amount) {

@@ -83,6 +83,16 @@ export class UIController {
   }
 
   renderDrills(onResourceChange, onFuel, onClusterChange) {
+    const active = document.activeElement;
+    if (
+      active &&
+      active.tagName === "SELECT" &&
+      this.drillContainer.contains(active)
+    ) {
+      this.refreshDrillStatuses();
+      return;
+    }
+
     this.drillContainer.innerHTML = "";
     if (!this.gameState.drills.length) {
       const hint = document.createElement("p");
@@ -95,6 +105,7 @@ export class UIController {
     for (const drill of this.gameState.drills) {
       const card = document.createElement("div");
       card.className = "machine-card";
+      card.dataset.id = drill.id;
       card.innerHTML = `
         <header>
           <h3>Coal Drill</h3>
@@ -139,6 +150,16 @@ export class UIController {
   }
 
   renderSmelters(onRecipeChange, onFuel) {
+    const active = document.activeElement;
+    if (
+      active &&
+      active.tagName === "SELECT" &&
+      this.smelterContainer.contains(active)
+    ) {
+      this.refreshSmelterStatuses();
+      return;
+    }
+
     this.smelterContainer.innerHTML = "";
     if (!this.gameState.smelters.length) {
       const hint = document.createElement("p");
@@ -151,6 +172,7 @@ export class UIController {
     for (const smelter of this.gameState.smelters) {
       const card = document.createElement("div");
       card.className = "machine-card";
+      card.dataset.id = smelter.id;
       card.innerHTML = `
         <header>
           <h3>Stone Smelter</h3>
@@ -178,6 +200,32 @@ export class UIController {
     });
     this.smelterContainer.querySelectorAll("button[data-role='fuel']").forEach((button) => {
       button.addEventListener("click", (event) => onFuel(event.target.dataset.id));
+    });
+  }
+
+  refreshDrillStatuses() {
+    this.drillContainer.querySelectorAll(".machine-card").forEach((card) => {
+      const id = card.dataset.id;
+      const drill = this.gameState.drills.find((d) => d.id === id);
+      if (!drill) return;
+      const status = card.querySelector(".status span");
+      if (status) {
+        status.className = drill.active ? "active" : "inactive";
+        status.textContent = `${drill.active ? "Active" : "Idle"} — Fuel ${drill.fuel.toFixed(1)}`;
+      }
+    });
+  }
+
+  refreshSmelterStatuses() {
+    this.smelterContainer.querySelectorAll(".machine-card").forEach((card) => {
+      const id = card.dataset.id;
+      const smelter = this.gameState.smelters.find((s) => s.id === id);
+      if (!smelter) return;
+      const status = card.querySelector(".status span");
+      if (status) {
+        status.className = smelter.active ? "active" : "inactive";
+        status.textContent = `${smelter.active ? "Active" : "Idle"} — Fuel ${smelter.fuel.toFixed(1)}`;
+      }
     });
   }
 

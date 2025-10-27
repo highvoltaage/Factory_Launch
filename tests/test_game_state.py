@@ -13,10 +13,7 @@ def test_initial_state_has_resources_and_machines():
     assert len(state.drills) == 2
     assert len(state.smelters) == 1
     chest = state.storage_chests[0]
-    for resource in ("stone", "coal", "iron", "copper"):
-        assert chest.items[resource] == 100
-    for product in ("iron_plates", "copper_plates"):
-        assert chest.items[product] == 50
+    assert chest.items == {}
 
 
 def test_drill_output_scales_with_cluster():
